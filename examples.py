@@ -7,7 +7,8 @@ import sys
 import http.client
 import urllib.request
 
-CONF = dict( line.replace('\n', '').split(',') for line in open('../conf') if line != '' )
+CONF = dict( line.replace('\n', '').split(',') for line in open('credentials/keys') if line != '' )
+print( CONF )
 def error_handler(err):
   ex = err['exception']
   if isinstance(ex, HTTPError) and ex.code == 503:
@@ -21,17 +22,17 @@ if '--test' in sys.argv:
   amazon = bottlenose.Amazon( CONF['ACCESS_KEY'], CONF['SECRET_ACCESS_KEY'], CONF['ASSOCIATE_TAG'], Region='JP', ErrorHandler=error_handler )
 
   # 商品情報のアトリビュート、属性情報、出版社、製造会社, title, auther, 大きさ、諸々
-  response = amazon.ItemLookup(ItemId="4774142298", ResponseGroup="ItemAttributes")
-  item_attr = BeautifulSoup(response,"lxml")
-  print(item_attr)
+  # response = amazon.ItemLookup(ItemId="4774142298", ResponseGroup="ItemAttributes")
+  # item_attr = BeautifulSoup(response,"lxml")
+  # print(item_attr)
 
   # 類似商品の検索
   # top10の類似度の高い商品が帰ってくる
   # 類似度を算出するアルゴリズムは不明
-  response = amazon.ItemLookup(ItemId="4774142298", ResponseGroup="Similarities")
-  similarities = BeautifulSoup(response,"lxml")
-  for sim in similarities.findAll('title'):
-    print(sim )
+  # response = amazon.ItemLookup(ItemId="4774142298", ResponseGroup="Similarities")
+  # similarities = BeautifulSoup(response,"lxml")
+  # for sim in similarities.findAll('title'):
+  #  print(sim )
 
   # 特定のキーワードが所属しうる、カテゴリ名とブラウズノードIDを対応させて表示する
   ## ブラウズノードIDは商品のカテゴリみたいなもの
