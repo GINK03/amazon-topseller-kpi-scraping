@@ -15,25 +15,27 @@ def error_handler(err):
     time.sleep(1) # 1秒待つ
     return True
 
-if '--test' in sys.argv:
-  # 本以外の角度では、asinコードとよばれるコードを持っていてそのコードでクエリを打って情報を取得する必要がある
-  # asinは別途、取得するプログラムを書いたのでそちらを参照
+# 本以外の角度では、asinコードとよばれるコードを持っていてそのコードでクエリを打って情報を取得する必要がある
+# asinは別途、取得するプログラムを書いたのでそちらを参照
 
-  amazon = bottlenose.Amazon( CONF['ACCESS_KEY'], CONF['SECRET_ACCESS_KEY'], CONF['ASSOCIATE_TAG'], Region='JP', ErrorHandler=error_handler )
+amazon = bottlenose.Amazon( CONF['ACCESS_KEY'], CONF['SECRET_ACCESS_KEY'], CONF['ASSOCIATE_TAG'], Region='JP', ErrorHandler=error_handler )
 
+if '--attribute' in sys.argv:
   # 商品情報のアトリビュート、属性情報、出版社、製造会社, title, auther, 大きさ、諸々
-  # response = amazon.ItemLookup(ItemId="4774142298", ResponseGroup="ItemAttributes")
-  # item_attr = BeautifulSoup(response,"lxml")
-  # print(item_attr)
+  response = amazon.ItemLookup(ItemId="4774142298", ResponseGroup="ItemAttributes")
+  item_attr = BeautifulSoup(response,"lxml")
+  print(item_attr)
 
+if '--similarities' in sys.argv:
   # 類似商品の検索
   # top10の類似度の高い商品が帰ってくる
   # 類似度を算出するアルゴリズムは不明
-  # response = amazon.ItemLookup(ItemId="4774142298", ResponseGroup="Similarities")
-  # similarities = BeautifulSoup(response,"lxml")
-  # for sim in similarities.findAll('title'):
-  #  print(sim )
+  response = amazon.ItemLookup(ItemId="4774142298", ResponseGroup="Similarities")
+  similarities = BeautifulSoup(response,"lxml")
+  for sim in similarities.findAll('title'):
+   print(sim )
 
+if '--browsnode' in sys.argv or '--categories' in sys.argv:
   # 特定のキーワードが所属しうる、カテゴリ名とブラウズノードIDを対応させて表示する
   ## ブラウズノードIDは商品のカテゴリみたいなもの
   response = amazon.ItemLookup(Keywords='任天堂', Operation='ItemSearch', ResponseGroup='BrowseNodes', SearchIndex='All')
@@ -41,8 +43,10 @@ if '--test' in sys.argv:
   bnodeids = [ b.text for b in soup.findAll('browsenodeid') ]
   names = [ n.text for n in soup.findAll('name') ]
   pairs = dict(zip(names, bnodeids) )
-  print(soup )
-  print(pairs )
+  print( soup )
+  print( pairs )
+
+if '--topseller' in sys.argv:
   # ブラウザノードIDの領域内でランキングを表示する
   response = amazon.ItemLookup(BrowseNodeId='503674', Operation='BrowseNodeLookup', ResponseGroup='TopSellers')
   soup = BeautifulSoup(response, 'lxml')
@@ -52,7 +56,7 @@ if '--test' in sys.argv:
   pairs = dict(zip(asins, titles))
   print(pairs)
 
-  """
+if '--reviews' in sys.argv:
   # レビューが書かれたurlを返却する.
   ## 商品レビューの内容はAPIが直接返してくれるわけでないので注意
   ## 商品情報のレビューのみを表示
@@ -63,7 +67,5 @@ if '--test' in sys.argv:
     url = rev.text.replace('amp;', '')
     print( url )
     pages = urllib.request.urlopen(url).read().decode('utf8')
-    # print( pages )
     soup = BeautifulSoup(pages, 'lxml')
     print( soup.text )
-  """
