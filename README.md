@@ -30,6 +30,31 @@ keysには、AWSのアクセスキーと、シークレットキーと、ユー�
 ```console
 $ python3 examples.py '--attribute'
 ```
+サンプル出力結果
+```console
+<idtype>ASIN</idtype><itemid>4774142298</itemid>
+<responsegroup>ItemAttributes</responsegroup>
+<asin>4774142298</asin>
+<url>https://www.amazon.co.jp/gp/pdp/taf/4774142298</url>
+<itemattributes>
+  <author>辻 真吾</author>
+  <binding>大型本</binding>
+  <ean>9784774142296</ean>
+  <isbn>4774142298</isbn>
+  <label>技術評論社</label>
+  <language><name>日本語</name><type>Published</type></language>
+  <manufacturer>技術評論社</manufacturer>
+  <numberofpages>320</numberofpages>
+  <height units="100分の1インチ">87</height>
+  <length units="100分の1インチ">898</length>
+  <weight units="100分の1ポンド">123</weight>
+  <width units="100分の1インチ">724</width>
+  <publisher>技術評論社</publisher>
+  <studio>技術評論社</studio>
+  <title>Pythonスタートブック</title>
+</itemattributes>
+```
+
 類似商品トップ１０を表示
 ```console
 $ python3 examples.py '--similarities'
